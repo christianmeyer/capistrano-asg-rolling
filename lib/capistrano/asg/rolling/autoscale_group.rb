@@ -36,6 +36,7 @@ module Capistrano
         def launch_template
           @launch_template ||= begin
             template = aws_autoscaling_group.launch_template
+            template ||= aws_autoscaling_group.mixed_instances_policy.launch_template.launch_template_specification rescue nil
             raise Capistrano::ASG::Rolling::NoLaunchTemplate if template.nil?
 
             LaunchTemplate.new(template.launch_template_id, template.version, template.launch_template_name)
